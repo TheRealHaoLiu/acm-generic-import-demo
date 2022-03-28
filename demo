@@ -77,7 +77,7 @@ for kubeconfig in `ls kubeconfigs/*`; do
 done
 
 comment "Key takeaway from the demo:"
-echo "- import flow is reusing a templted import.yaml using"
+echo "- import flow is reusing a templated import.yaml"
 echo "- import flow DO NOT require to have permission to read secret from hub"
 
 comment "To cleanup the demo run demo-cleanup.sh"
