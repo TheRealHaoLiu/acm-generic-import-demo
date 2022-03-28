@@ -57,11 +57,13 @@ for kubeconfig in `ls kubeconfigs/*`; do
     cluster_name=`basename $kubeconfig`
 
     comment "Importing cluster with name: $cluster_name"
+    echo "this would be a part of the AoC deployment script"
     pe "KUBECONFIG=$kubeconfig kubectl cluster-info"
     pe "KUBECONFIG=$kubeconfig ./generic-import.sh $cluster_name"
 
     comment "After the import we see new ManagedCluster being created but not approved"
     pe "kubectl get managedcluster $cluster_name"
+
     comment "CSR created by Klusterlet is not approved either"
     pe "kubectl get csr -l \"open-cluster-management.io/cluster-name=$cluster_name,!open-cluster-management.io/addon-name\" -o name"
     
@@ -73,6 +75,10 @@ for kubeconfig in `ls kubeconfigs/*`; do
     pe "kubectl wait --for=condition=ManagedClusterConditionAvailable managedcluster $cluster_name --timeout=600s"
     pe "kubectl get managedcluster $cluster_name"
 done
+
+comment "Key takeaway from the demo:"
+echo "- import flow is reusing a templted import.yaml using"
+echo "- import flow DO NOT require to have permission to read secret from hub"
 
 comment "To cleanup the demo run demo-cleanup.sh"
 
