@@ -3,6 +3,9 @@
 IMPORT_NS_NAME='generic-import'
 IMPORT_SA_NAME='aoc-import'
 
+mkdir -p configs
+mkdir -p kubeconfigs
+
 # create generic import serviceaccount
 kubectl create namespace $IMPORT_NS_NAME 2> /dev/null 
 kubectl create serviceaccount -n $IMPORT_NS_NAME $IMPORT_SA_NAME 2> /dev/null
