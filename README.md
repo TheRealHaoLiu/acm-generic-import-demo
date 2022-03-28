@@ -4,6 +4,7 @@
 this demo will iterate through all the kubeconfig and demonstrate that you can use a generic kubeconfig to import multiple clusters
 
 ## Structure of the project
+```
 ├── approve-import.sh
 ├── az-get-kubeconfig.sh
 ├── configs
@@ -24,6 +25,7 @@ this demo will iterate through all the kubeconfig and demonstrate that you can u
     ├── crds.yaml
     ├── import.yaml
     └── managedcluster.yaml
+```
 
 - `demo`: run the main demo
 - `demo-magic`: magic that drives the demo
