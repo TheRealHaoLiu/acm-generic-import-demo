@@ -38,6 +38,26 @@ rules:
   - managedclustersets/join
   verbs:
   - create
+- apiGroups:
+  - operator.open-cluster-management.io
+  resources:
+  - multiclusterhubs
+  verbs:
+  - list
+- apiGroups:
+  - operators.coreos.com
+  resources:
+  - subscriptions
+  - clusterserviceversions
+  verbs:
+  - get
+  - list
+- apiGroups:
+  - ''
+  resources:
+  - configmaps
+  verbs:
+  - get
 EOF
 
 cat << EOF | kubectl apply -f - 2> /dev/null
@@ -66,8 +86,12 @@ EOF
 import_sa_secret_name=`kubectl get serviceaccount $IMPORT_SA_NAME -n $IMPORT_NS_NAME -o jsonpath='{.secrets}' \
     | jq -r '[.[] |  select(.name | contains ("token")) | .name] | first '`
 
-hub_kubeconfig_json_b64=`kubectl config view --minify --raw=true | yq | base64 -w 0` #note: do not print contain cred
 
+if [ "$(uname)" == "Darwin" ]; then
+  hub_kubeconfig_json_b64=`kubectl config view --minify --flatten --raw=true -o json  | jq | base64` #note: do not print contain cred
+else
+  hub_kubeconfig_json_b64=`kubectl config view --minify --flatten --raw=true -o json | jq | base64 -w 0` #note: do not print contain cred
+fi
 hub_insecure_skip_tls_verify=`echo $hub_kubeconfig_json_b64 | base64 -d | jq -r '.clusters[0].cluster."insecure-skip-tls-verify"'`
 # TODO: if CA cert configured for hub-kubeconfig extract CA from hub-kubeconfig
 
